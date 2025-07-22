@@ -1,11 +1,13 @@
 //selection process
-
+// identifying the input fields
 let cityInput = document.getElementById('city_input');
 let searchBtn = document.getElementById('searchBtn');
 let locationBtn = document.getElementById('locationBtn');
 
-
+//key from openweathemap.com account
 let api_key = 'c186c6b71dbfc546a0b7e3b465b279f7';
+
+//identifying the layout fields
 let currentweatherCard = document.querySelectorAll('.weather-left .card')[0];
 let fiveDaysForecastCard = document.querySelector('.day-forecast');
 
@@ -18,14 +20,15 @@ let visibilityVal = document.getElementById('visibilityVal')
 let windSpeedVal = document.getElementById('windSpeedVal')
 let feelsVal = document.getElementById('feelsVal')
 
+//value corresponding to each aqi index
 let aqiList = ['Good', 'Fair', 'Moderate', 'Poor', 'Very Poor'];
 
 let hourlyForecastCard = document.querySelector('.hourly-forecast')
-
 let recentSearch = [];
 
 //modification
-
+// function which fetches Url that takes the entered city name and gives its information 
+// like lattitude and longitude and more from which we can further use
 function getCityCoordinates() {
     let cityName = cityInput.value.trim();
     //console.log(cityName);
@@ -37,7 +40,7 @@ function getCityCoordinates() {
         return;
     let GEOCODING_API_URL = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&
                             limit=1&appid=${api_key}`;
-
+    // fetching api with url
     fetch(GEOCODING_API_URL)
         .then(res => res.json())
         .then(data => {
@@ -49,20 +52,19 @@ function getCityCoordinates() {
         })
 }
 
-
+// multiple url api fetching for each portion
  function getweatherDetails(name, lat, lon, country, state) {
 
-console.log(name, lat, lon, country, state);
-
-
+    console.log(name, lat, lon, country, state);
     let FORECAST_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${api_key} `;
     let WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`;
     let AIR_POLLUTION_API_URL = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${api_key}`;
 
-
+    //to converts the fetched data to a more user readable format
     let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
+    // left side first portion i.e. current wesather deatils with location info 
+    // and right sides sunrise-sunset and the weather conditons info are obtained together
     fetch(WEATHER_API_URL)
         .then(res => res.json())
         .then(data => {
@@ -91,7 +93,7 @@ console.log(name, lat, lon, country, state);
             let { humidity, pressure, feels_like } = data.main;
             let { speed } = data.wind
 
-
+            // using moment.js for formating
             let sRiseTime = moment.utc(sunrise, 'X').add(timezone, 'seconds').format('hh:mm A')
             let sSetTime = moment.utc(sunset, 'X').add(timezone, 'seconds').format('hh:mm A');
 
@@ -132,7 +134,7 @@ console.log(name, lat, lon, country, state);
         });
 
 
-
+        // forecast prediction at different time uses a different url and api
     fetch(FORECAST_API_URL)
         .then(res => res.json())
         .then(data => {
@@ -188,6 +190,7 @@ console.log(name, lat, lon, country, state);
         });
 
 
+        // to AQI at the location we make use of another api and URL
     fetch(AIR_POLLUTION_API_URL)
         .then(res => res.json())
         .then(data => {
@@ -241,6 +244,8 @@ console.log(name, lat, lon, country, state);
 
 }
 
+// when current location is pressed we use navigator and geolocation property
+// to fetch browser location and pass it to get the weather information
 async function getUserCoordinates() {
 
     navigator.geolocation.getCurrentPosition(async position => {
@@ -266,6 +271,7 @@ async function getUserCoordinates() {
     });
 }
 
+// adding listeners to the inputs
 searchBtn.addEventListener('click', getCityCoordinates);
 locationBtn.addEventListener('click', getUserCoordinates);
 

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Forecast Application</title>
 
+    <!-- favicon -->
     <link rel="icon" type="image/x-icon" href="images/weather.png"/>
 
 
@@ -28,8 +29,9 @@
 
 <body>
     <div class="container">
+        <!-- header nav bar with search inputs -->
         <div class="header">
-            
+            <!-- logo and input fields -->
             <h2 class="tt"><img src="images/weather.png" class="imgW">Weather</h2>
             <div class="weather-input">
                 <input type="search" name="city" id="city_input"  results="5" required placeholder="Enter City Name">
@@ -43,7 +45,9 @@
             </div>
         </div>
 
+        <!-- main element where fetched data is  displayed-->
         <div class="weather-data">
+            <!-- left portion with current weather and 5 days forecast portions-->
             <div class="weather-left">
                 <div class="card">
                     <div class="current-weather">
@@ -111,8 +115,8 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
+            <!-- right portion with AQI, sunset-sunrise, weather highlights and todays weather at different time-->
             <div class="weather-right">
                 <h2>Todays highlight</h2>
                 <div class="highlights">
@@ -187,6 +191,7 @@
                         </div>
 
                     </div>
+                    <!-- dsiplaying certain key qualities of current weather highlights -->
                     <div class="card">
                         <div class="card-head">
                             <p>Humidity</p>
@@ -238,6 +243,7 @@
                     </div>
 
                 </div>
+                <!-- different time interval weather information -->
                 <h2>Today at</h2>
                     <div class="hourly-forecast">
                         <div class="card">
@@ -286,7 +292,8 @@
    
         </div>
     </div>
-
+<!-- linking JavaScript library Moment.js designed to simplify 
+ the parsing, validation, manipulation, and formatting of dates and times -->
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script src="script.js" ></script>
     <!-- <script src="try.js" ></script> -->
