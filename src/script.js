@@ -2,32 +2,35 @@
 
 let cityInput = document.getElementById('city_input');
 let searchBtn = document.getElementById('searchBtn');
+let locationBtn = document.getElementById('locationBtn');
+
+
 let api_key = 'c186c6b71dbfc546a0b7e3b465b279f7';
 let currentweatherCard = document.querySelectorAll('.weather-left .card')[0];
 let fiveDaysForecastCard = document.querySelector('.day-forecast');
 
-let aqicard = document.querySelectorAll('.highlights .card')[0];
+let aqiCard = document.querySelectorAll('.highlights .card')[0];
 let sunriseCard = document.querySelectorAll('.highlights .card')[1];
 
 let humidityVal = document.getElementById('humidityVal')
-let pressureval = document.getElementById('pressureval')
+let pressureVal = document.getElementById('pressureVal')
 let visibilityVal = document.getElementById('visibilityVal')
 let windSpeedVal = document.getElementById('windSpeedVal')
-let feelsval = document.getElementById('feelsval')
+let feelsVal = document.getElementById('feelsVal')
 
 let aqiList = ['Good', 'Fair', 'Moderate', 'Poor', 'Very Poor'];
 
 let hourlyForecastCard = document.querySelector('.hourly-forecast')
 
-
+let recentSearch = [];
 
 //modification
 
-//searchBtn.addEventListener('click', getCityCoordinates);
-
-
 function getCityCoordinates() {
     let cityName = cityInput.value.trim();
+    //console.log(cityName);
+    recentSearch.push(cityName)
+    window.localStorage.setItem("recentSearch", JSON.stringify(recentSearch))
 
     cityInput.value = '';
     if (!cityName)
@@ -42,12 +45,16 @@ function getCityCoordinates() {
             getweatherDetails(name, lat, lon, country, state);
         })
         .catch(() => {
-            alert(`Failed to fetch coordinates of ${cityName}`);
+            alert(`Invalid City Name\nFailed to fetch coordinates of ${cityName}`);
         })
 }
 
 
-function getweatherDetails(name, lat, lon, country, state) {
+ function getweatherDetails(name, lat, lon, country, state) {
+
+console.log(name, lat, lon, country, state);
+
+
     let FORECAST_API_URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${api_key} `;
     let WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${api_key}`;
     let AIR_POLLUTION_API_URL = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${api_key}`;
@@ -59,7 +66,7 @@ function getweatherDetails(name, lat, lon, country, state) {
     fetch(WEATHER_API_URL)
         .then(res => res.json())
         .then(data => {
-            console.log(data)
+            //console.log(data)
             let date = new Date();
             currentweatherCard.innerHTML = `
                     <div class="current-weather"> 
@@ -76,7 +83,7 @@ function getweatherDetails(name, lat, lon, country, state) {
                     <div class="card-footer"> 
                         <p><i class="fa-light fa-calendar"></i> ${days[date.getDay()]}, ${date.getDate()}, 
                         ${months[date.getMonth()]} ${date.getFullYear()}</p> 
-                        <p><i class="fa-light fa-location-dot"></i> ${name}, ${country}</p> 
+                        <p><i class="fa-light fa-location-dot"></i> ${name}, ${country}, ${state}</p> 
                     </div> `;
 
             let { sunrise, sunset } = data.sys;
@@ -84,7 +91,8 @@ function getweatherDetails(name, lat, lon, country, state) {
             let { humidity, pressure, feels_like } = data.main;
             let { speed } = data.wind
 
-            let SRiseTime = moment.utc(sunrise, 'X').add(timezone, 'seconds').format('hh:mm A')
+
+            let sRiseTime = moment.utc(sunrise, 'X').add(timezone, 'seconds').format('hh:mm A')
             let sSetTime = moment.utc(sunset, 'X').add(timezone, 'seconds').format('hh:mm A');
 
             sunriseCard.innerHTML = ` 
@@ -94,7 +102,7 @@ function getweatherDetails(name, lat, lon, country, state) {
                 <div class="sunrise-sunset"> 
                     <div class="item"> 
                         <div class="icon"> 
-                            <i class="fa-light fa-sunrise fa-4x"></i> 
+                            <i class='bx  bx-sun-rise icon-size'></i> 
                         </div> 
                         <div> 
                             <p>Sunrise</p>
@@ -103,7 +111,7 @@ function getweatherDetails(name, lat, lon, country, state) {
                     </div>
                     <div class="item"> 
                         <div class="icon"> 
-                            <i class="fa-light fa-sunset fa-4x"></i> 
+                            <i class='bx  bx-sun-set icon-size'></i> 
                         </div>
                         <div> 
                             <p>Sunset</p> 
@@ -113,10 +121,10 @@ function getweatherDetails(name, lat, lon, country, state) {
                 </div>`;
 
             humidityVal.innerHTML = `${humidity}%`;
-            pressureval.innerHTML = `${pressure}hPa`;
-            visibilityval.innerHTML = `${visibility / 1000}km`;
+            pressureVal.innerHTML = `${pressure}hPa`;
+            visibilityVal.innerHTML = `${visibility / 1000}km`;
             windSpeedVal.innerHTML = `${speed}m/s`;
-            feelsval.innerHTML = `${(feels_like - 273.15).toFixed(2)}&deg;C`;
+            feelsVal.innerHTML = `${(feels_like - 273.15).toFixed(2)}&deg;C`;
 
         })
         .catch(() => {
@@ -130,7 +138,6 @@ function getweatherDetails(name, lat, lon, country, state) {
         .then(data => {
             console.log(data);
 
-
             let hourlyForecast = data.list;
             hourlyForecastCard.innerHTML = '';
             for (i = 0; i <= 7; i++) {
@@ -138,13 +145,13 @@ function getweatherDetails(name, lat, lon, country, state) {
                 let hrForecastDate = new Date(hourlyForecast[i].dt_txt);
                 let hr = hrForecastDate.getHours();
                 let a = 'PM';
-                if (hr < 12) 
+                if (hr < 12)
                     a = 'AM';
-                if (hr == 0) 
+                if (hr == 0)
                     hr = 12;
-                if (hr > 12) 
+                if (hr > 12)
                     hr = hr - 12;
-                
+
                 hourlyForecastCard.innerHTML += `
                 <div class="card">
                     <p>${hr} ${a}</p>
@@ -153,7 +160,6 @@ function getweatherDetails(name, lat, lon, country, state) {
                 </div>
                 `;
             }
-
 
             let uniqueForecastDays = [];
             let fiveDaysForecast = data.list.filter(forecast => {
@@ -186,13 +192,15 @@ function getweatherDetails(name, lat, lon, country, state) {
         .then(res => res.json())
         .then(data => {
             let { co, no, no2, o3, so2, pm2_5, pm10, nh3 } = data.list[0].components;
+            console.log(data.list[0].components);
+
             aqiCard.innerHTML = `
                 <div class="card-head">
                     <p>Air Quality Index</p>
                     <p class="air-index aqi-${data.list[0].main.aqi}">${aqiList[data.list[0].main.aqi - 1]}</p>
                 </div>
                 <div class="air-indices">
-                    <i class="fa-regular fa-wind fa-3x"></i>
+                    <i class='bx  bx-wind icon-size'></i>
                     <div class="item">
                         <p>PM2.5</p>
                         <h2>${pm2_5}</h2>
@@ -201,8 +209,8 @@ function getweatherDetails(name, lat, lon, country, state) {
                         <p>PM10</p>
                         <h2>${pm10}</h2>
                     </div>
-                    <p>S02</p>
                     <div class="item">
+                        <p>S02</p>
                         <h2>${so2}</h2>
                     </div>
                     <div class="item">
@@ -233,34 +241,32 @@ function getweatherDetails(name, lat, lon, country, state) {
 
 }
 
-function getUserCoordinates() {
+async function getUserCoordinates() {
 
-    navigator.geolocation.getCurrentPosition(position => {
+    navigator.geolocation.getCurrentPosition(async position => {
 
         let { latitude, longitude } = position.coords;
-        let REVERSE_GEOCODING_URL = `https://api.openweathermap.org/geo/1.0/reverse?
-        lat=${latitude}&lon=${longitude}&limit=1&appid=${api_key}`;
+        let REVERSE_GEOCODING_URL = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${api_key}`;
 
-        fetch(REVERSE_GEOCODING_URL)
-            .then(res => res.json())
-            .then(data => {
-                let { name, country, state } = data[0];
-                getWeatherDetails(name, latitude, longitude, country, state);
-            })
-            .catch(() => {
-                alert('Failed to fetch user coordinates');
-            });
-    }, error => {
-        if (error.code === error.PERMISSION_DENIED)
-            alert('Geolocation permission denied. Please reset location permission to grant access again');
+        try {
+            const response = await fetch(REVERSE_GEOCODING_URL);
+            if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+            }
+            
+            const json = await response.json();
+            let { name, country, state } = json[0];
+            let nameEX= name.split(" ")
+
+            //.log(nameEX[0], Number(latitude.toFixed(7)), Number(longitude.toFixed(7)), country, state);
+            getweatherDetails(nameEX[0], Number(latitude.toFixed(7)), Number(longitude.toFixed(7)), country, state);
+        } catch (e) {
+            console.log("error",e);
+        }
     });
 }
 
-searchBtn.addEventListener('click', getcityCoordinates);
+searchBtn.addEventListener('click', getCityCoordinates);
 locationBtn.addEventListener('click', getUserCoordinates);
-
-
-//_________________________________
-
 
 

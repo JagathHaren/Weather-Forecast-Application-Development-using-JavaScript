@@ -4,11 +4,6 @@
     --bg-color2: rgb(28, 92, 104);
     --bg-color3: rgb(133, 93, 33);
 
-    --aqi-1: rgb(57, 255, 8);
-    --aqi-2: rgb(255, 251, 0);
-    --aqi-3: rgb(255, 196, 3);
-    --aqi-4: rgb(255, 123, 0);
-    --aqi-5: rgb(255, 8, 0);
 }
 
 /* setting margin and padding universally to remove default browser spacing from all elements.
@@ -163,26 +158,30 @@ body {
                     border-radius: 15px;
 
                     /* background-color: var(--aqi-1); */
-                    & .aqi-1 {
-                        background-color: var(--aqi-1);
+                    
+                }
+                & .aqi-1 {
+                        background-color: rgb(57, 255, 8);
+
                     }
 
                     & .aqi-2 {
-                        background-color: var(--aqi-2);
+                        background-color: rgb(255, 251, 0);
                     }
 
                     & .aqi-3 {
-                        background-color: var(--aqi-3);
+                        background-color: rgb(255, 196, 3);
+
                     }
 
                     & .aqi-4 {
-                        background-color: var(--aqi-4);
+                        background-color: rgb(255, 123, 0);
+
                     }
 
                     & .aqi-5 {
-                        background-color: var(--aqi-5);
+                        background-color: rgb(255, 8, 0);
                     }
-                }
 
             }
 
@@ -199,6 +198,7 @@ body {
             & .sunrise-sunset {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
+                align-items: center;
 
                 & .item {
                     display: flex;
@@ -237,8 +237,14 @@ hr {
     font-size: 3em;
 }
 
+.imgW{
+    width: 50px;
+    display: inline;
+    padding: 5px;;
+}
+
 /* responsive size with media query at each breakpoint*/
-/* @media (max-width: 1100px) {
+ @media (max-width: 1100px) {
     .weather-data {
         grid-template-columns: repeat(3, 1fr);
 
@@ -251,6 +257,13 @@ hr {
                 &.card:nth-of-type(1) {
                     grid-column: span 3;
                 }
+
+                &.card{
+
+                    &.sunrise-sunset {
+                         grid-template-columns: 1fr;
+                    }
+                }
             }
 
             & .hourly-forecast {
@@ -258,7 +271,7 @@ hr {
             }
         }
     }
-} */
+} 
 
 @media(max-width: 1040px) {
     .weather-data {

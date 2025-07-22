@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Forecast Application</title>
 
+    <link rel="icon" type="image/x-icon" href="images/weather.png"/>
+
+
     <link rel="stylesheet" href="style.css">
 
     <!-- linking and running Tailwind CSS from scratch with the Tailwind CLI tool  -->
@@ -26,10 +29,11 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2 class="tt">Weather</h2>
+            
+            <h2 class="tt"><img src="images/weather.png" class="imgW">Weather</h2>
             <div class="weather-input">
-                <input type="text" name="city" id="city_input" placeholder="Enter City Name">
-                <button type="button" id="searchBtn">
+                <input type="search" name="city" id="city_input"  results="5" required placeholder="Enter City Name">
+                <button type="button" id="searchBtn" >
                     <i class='bx  bx-search'></i> Search
                 </button>
                 <button type="button" id="locationBtn">
@@ -107,6 +111,7 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
             <div class="weather-right">
                 <h2>Todays highlight</h2>
@@ -277,13 +282,14 @@
                         </div>
 
                     </div>
-                </div>
-   
             </div>
+   
         </div>
+    </div>
 
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
     <script src="script.js" ></script>
+    <!-- <script src="try.js" ></script> -->
 </body>
 
 </html>
